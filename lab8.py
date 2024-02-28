@@ -2,6 +2,7 @@ from collections import UserDict
 import re
 from datetime import datetime
 from datetime import timedelta
+import pickle
 
 def input_error(func):
     def inner(*args, **kwargs):
@@ -157,7 +158,7 @@ class AddressBook(UserDict):
                 sdate = date_user.strftime("%d.%m.%Y")
                 s1 = f"Name: {self.data[rec].name} - DR: {sdate}"
                 listall.append(s1)
-        return "\n".join(listall)
+        return listall
     
 def all_contact(self) -> str:
     listall = [f"{self.data[el1]}" for el1 in self.data]
@@ -197,9 +198,21 @@ def show_birthday(book: AddressBook, args):
 @input_error
 def birthdays(book: AddressBook):
     return book.get_upcoming_birthdays()
+
+def save_data(book: AddressBook, filename="addressbook.pkl"):
+    with open(filename, "wb") as f:
+        pickle.dump(book, f)
+
+def load_data(filename="addressbook.pkl") -> AddressBook:
+    try:
+        with open(filename, "rb") as f:
+            return pickle.load(f)
+    except FileNotFoundError:
+        return AddressBook()  # Повернення нової адресної книги, якщо файл не знайдено
        
 def main():
-    book = AddressBook()
+    # book = AddressBook()
+    book = load_data()
     
     # user_input = "add Toxa 1234567890"
     # command, *args = parse_input(user_input)
@@ -247,6 +260,7 @@ def main():
         command, *args = parse_input(user_input)
 
         if command in ["close", "exit"]:
+            save_data(book)
             print("Good bye!")
             break
 
