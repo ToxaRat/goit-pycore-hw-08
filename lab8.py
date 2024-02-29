@@ -141,23 +141,24 @@ class AddressBook(UserDict):
         now = datetime.today().date()
         # Пройдіться по списку users та аналізуйте дати народження кожного
         for rec in self.data:
-            date_user = self.data[rec].birthday.value
-            # міняемо год на поточний
-            date_user = date_user.replace(year=now.year)
-            # Розрахунок кількості днів
-            days_since = date_user.toordinal() - now.toordinal()
-            # на тиждне?
-            if days_since>=0 and days_since<=7:
-                # яка доба
-                iday = int(date_user.weekday())
-                if iday==5:
-                   date_user = date_user + timedelta(days=2) # Додаємо 2 днів
-                elif iday==6:
-                    date_user = date_user + timedelta(days=1) # Додаємо 2 днів
-                # нова дата ДН    
-                sdate = date_user.strftime("%d.%m.%Y")
-                s1 = f"Name: {self.data[rec].name} - DR: {sdate}"
-                listall.append(s1)
+            if self.data[rec].birthday != None:
+                date_user = self.data[rec].birthday.value
+                # міняемо год на поточний
+                date_user = date_user.replace(year=now.year)
+                # Розрахунок кількості днів
+                days_since = date_user.toordinal() - now.toordinal()
+                # на тиждне?
+                if days_since>=0 and days_since<=7:
+                    # яка доба
+                    iday = int(date_user.weekday())
+                    if iday==5:
+                        date_user = date_user + timedelta(days=2) # Додаємо 2 днів
+                    elif iday==6:
+                        date_user = date_user + timedelta(days=1) # Додаємо 2 днів
+                    # нова дата ДН    
+                    sdate = date_user.strftime("%d.%m.%Y")
+                    s1 = f"Name: {self.data[rec].name} - DR: {sdate}"
+                    listall.append(s1)
         return listall
     
 def all_contact(self) -> str:
